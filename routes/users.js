@@ -3,9 +3,12 @@ var express = require('express');
 var router = express.Router();
 var dbConn  = require('../lib/db');
 var mock = require('../lib/dbr');
+var logger = require('../lib/logger');
+
 
 // display user page
 router.get('/', function(req, res, next) {
+    logger.info("In get user home page");
     dbConn.query('SELECT * FROM usertbl ORDER BY id desc',function(err,rows)     {
         if(err) {
             req.flash('error', err);
@@ -21,6 +24,8 @@ router.get('/', function(req, res, next) {
 // display add user page
 router.get('/add', function(req, res, next) {
     // render to add.ejs
+    logger.info("In get user add page");
+
     res.render('users/add', {
         name: '',
         email: '',
@@ -30,6 +35,7 @@ router.get('/add', function(req, res, next) {
 
 // add a new user
 router.post('/add', function(req, res, next) {
+    logger.info("In get save page");
 
     let name = req.body.name;
     let email = req.body.email;
@@ -38,6 +44,7 @@ router.post('/add', function(req, res, next) {
 
     if(name.length === 0 || email.length === 0 || position === 0) {
         errors = true;
+        logger.info("Error in Validation");
 
         // set flash message
         req.flash('error', "Please enter name and email and position");
@@ -57,6 +64,8 @@ router.post('/add', function(req, res, next) {
             email: email,
             position:position
         }
+
+        logger.info("going to insert data to db");
 
         // insert query
         dbConn.query('INSERT INTO usertbl SET ?', form_data, function(err, result) {
@@ -187,6 +196,8 @@ router.get('/mock',function(req,res,next){
                 email: param[i].email,
                 position:param[i].position
             }
+
+            logger.info("going to insert data to db :", param[i].name);
 
             // insert query
             dbConn.query('INSERT INTO usertbl SET ?', form_data, function(err, result) {
