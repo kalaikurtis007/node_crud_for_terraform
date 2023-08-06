@@ -4,7 +4,12 @@ var path = require('path');
 var flash = require('express-flash');
 var session = require('express-session');
 var mysql = require('mysql');
-var connection  = require('./lib/db');
+var connection = require('./lib/db');
+var logger = require('./lib/logger');
+var port = config.get("port");
+var api = "/api/v1/";
+
+
 var usersRouter = require('./routes/users');
 var app = express();
 
@@ -16,22 +21,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, './public/')));
 
 app.use(session({
-    cookie: { maxAge: 60000 },
-    store: new session.MemoryStore,
-    saveUninitialized: true,
-    resave: 'true',
-    secret: 'secret'
+  cookie: { maxAge: 60000 },
+  store: new session.MemoryStore,
+  saveUninitialized: true,
+  resave: 'true',
+  secret: 'secret'
 }))
 
 app.use(flash());
-app.get('/',function(req, res, next){
-    res.render('index',{message:"success"});
+app.get(api, function (req, res, next) {
+  logger.info("In get home page");
+  res.render('index', { message: "success" });
 });
-app.use('/users', usersRouter);
+app.use(api + '/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
-app.listen(3000);
+app.listen(port, () => {
+  logger.info("RESTful API server started on : " + port);
+});
