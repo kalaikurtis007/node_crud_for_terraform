@@ -188,6 +188,8 @@ router.get('/delete/(:id)', function(req, res, next) {
     })
 })
 router.get('/mock',function(req,res,next){
+    logger.info("going to insert data to db :");
+
     var param = mock;
     var count = 0;
     if(param.length>0){
