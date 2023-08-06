@@ -4,6 +4,7 @@ var path = require('path');
 var flash = require('express-flash');
 var session = require('express-session');
 var mysql = require('mysql');
+const config = require("config");
 var connection = require('./lib/db');
 var logger = require('./lib/logger');
 var port = config.get("port");
@@ -37,7 +38,8 @@ app.use(api + '/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.render("404",{})
+ // next(createError(404));
 });
 
 app.listen(port, () => {
