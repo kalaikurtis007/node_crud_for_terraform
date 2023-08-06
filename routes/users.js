@@ -2,7 +2,8 @@
 var express = require('express');
 var router = express.Router();
 var dbConn  = require('../lib/db');
-var mock = require('../lib/dbr');
+var config = require("config");
+var mock = config.get("mockUser"); 
 var logger = require('../lib/logger');
 
 
@@ -187,7 +188,7 @@ router.get('/delete/(:id)', function(req, res, next) {
     })
 })
 router.get('/mock',function(req,res,next){
-    var param = mock();
+    var param = mock;
     var count = 0;
     if(param.length>0){
         for(var i=0; i<param.length;i++){
